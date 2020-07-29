@@ -9,14 +9,10 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 
-# Original fastai bear classifier model file.
-# export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
-
-# Get clock classification model file from google drive
-export_file_url = 'https://drive.google.com/file/d/1VKOS5e8q0fHdLkirMl87spNaGOjtubkb/view?usp=sharing'
+export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
 export_file_name = 'export.pkl'
 
-classes = ['analogue', 'digital']
+classes = ['black', 'grizzly', 'teddys']
 path = Path(__file__).parent
 
 app = Starlette()
@@ -64,16 +60,8 @@ async def analyze(request):
     img_data = await request.form()
     img_bytes = await (img_data['file'].read())
     img = open_image(BytesIO(img_bytes))
-    
-    # Extract class, index, and probability of predicted class.
-    pred_data  = learn.predict(img)
-    pred_class = str(pred_data[0])
-    pred_idx = int(pred_data[1])
-    pred_prob = float(pred_data[2][pred_idx])
-    
-    # Return the class and the probability
-    return JSONResponse({'result': pred_class,
-                        'probability' : pred_prob})
+    prediction = learn.predict(img)[0]
+    return JSONResponse({'result': str(prediction)})
 
 
 if __name__ == '__main__':
