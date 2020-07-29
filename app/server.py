@@ -70,10 +70,11 @@ async def analyze(request):
     pred_class = str(pred_data[0])
     pred_idx = int(pred_data[1])
     pred_prob = float(pred_data[2][pred_idx])
+    pred_percentage = "{:.2%}".format(pred_prob)
     
     # Return the class and the probability
     return JSONResponse({'result': pred_class,
-                        'probability' : pred_prob})
+                        'probability' : pred_percentage})
 
 
 if __name__ == '__main__':
